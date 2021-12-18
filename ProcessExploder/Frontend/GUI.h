@@ -9,6 +9,6 @@ class GUI
 public:
 	GUI() {};
 	static void clear(){if (system("CLS")) system("clear");}
-	static void display_processes(list<ProcessInfo>&);
+	static void display_processes(list<ProcessInfo*>&);
 };
 

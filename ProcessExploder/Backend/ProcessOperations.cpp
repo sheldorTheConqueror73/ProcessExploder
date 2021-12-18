@@ -1,7 +1,7 @@
 #pragma once
 #include "ProcessOperations.h"
 
-bool get_processes(list<ProcessInfo>& processes)
+bool get_processes(list<ProcessInfo*>& processes)
 {
 	HANDLE snap;
 	PROCESSENTRY32 process;
@@ -25,7 +25,7 @@ bool get_processes(list<ProcessInfo>& processes)
 	do
 	{
 		get_process_name(process.th32ProcessID, name);
-		processes.push_back(ProcessInfo(process,name));
+		processes.push_back(new ProcessInfo(process,name));
 	} while (Process32Next(snap, &process));
 
 	CloseHandle(snap);
@@ -35,18 +35,20 @@ bool get_processes(list<ProcessInfo>& processes)
 bool get_process_name(DWORD pid, LPWSTR &name)
 {
 	HANDLE process;
-	DWORD length;
-	process = OpenProcess(READ_CONTROL, FALSE, pid);
+	DWORD length=1024;
+	CHAR buffer[1024];
+	process = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, pid);
 
 
-	if (process == INVALID_HANDLE_VALUE)
+	if (process == NULL)
 	{
+		int num = GetLastError();
 		cerr << "Error getting process name, pid:"<<pid<<"\n";
 		return false;
 	}
 
-	length = GetModuleBaseNameW(process, NULL, name, 30);
-	if (!length)
+	if(! QueryFullProcessImageNameA(process, 0,buffer, &length))
+	
 	{
 		name =_wcsdup(L"<UNKOWN>");
 		CloseHandle(process);

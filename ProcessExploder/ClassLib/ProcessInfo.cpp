@@ -12,6 +12,7 @@ ProcessInfo::ProcessInfo(PROCESSENTRY32 entry, LPWSTR name)
 {
 	this->PID = entry.th32ProcessID ;
 	this->threads = entry.cntThreads;
-	this->path = _wcsdup(entry.szExeFile);
-	this->name = _wcsdup(name);
+	this->path = new WCHAR[40];
+	 wcsncpy_s(this->path,39, entry.szExeFile, 40);
+	this->name = name;
 }

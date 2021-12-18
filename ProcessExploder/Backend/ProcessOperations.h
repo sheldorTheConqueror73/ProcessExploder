@@ -6,5 +6,5 @@
 #include <psapi.h>
 #include "ProcessInfo.h"
 using namespace std;
-bool get_processes(list<ProcessInfo>&);
+bool get_processes(list<ProcessInfo*>&);
 bool get_process_name(DWORD, LPWSTR&);
